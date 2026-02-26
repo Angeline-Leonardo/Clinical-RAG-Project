@@ -8,15 +8,7 @@ Retrieval Augmented Generation API for clinical data using FastAPI, FAISS and Se
 3. Dockerized for easy deployment
 
 ## Architecture 
-Clinical Note
-     ↓
-LLM Classification
-     ↓
-Structured Labels
-     ↓
-FastAPI Endpoints
-     ↓
-Query Engine
+Clinical Note->LLM Classification->Structured Labels->FastAPI Endpoints->Query Engine
 
 ## Tech stack:
 PyTorch 2.2
