@@ -1,0 +1,42 @@
+[
+  {
+    "patient_id": "P001",
+    "note": "Patient shows partial response to chemotherapy. Mild nausea reported."
+  },
+  {
+    "patient_id": "P002",
+    "note": "Tumour size increased by 10%. Elevated liver enzymes observed."
+  },
+  {
+    "patient_id": "P003",
+    "note": "No disease progression. Stable condition over 3 months."
+  },
+  {
+    "patient_id": "P004",
+    "note": "Severe neutropenia detected. White blood cell count critically low."
+  },
+  {
+    "patient_id": "P005",
+    "note": "Blood pressure within normal range. No adverse effects noted."
+  },
+  {
+    "patient_id": "P006",
+    "note": "Rapid weight loss of 8kg in 4 weeks. Loss of appetite persists."
+  },
+  {
+    "patient_id": "P007",
+    "note": "MRI shows tumour shrinkage by 15%. Treatment well tolerated."
+  },
+  {
+    "patient_id": "P008",
+    "note": "Elevated creatinine levels. Possible kidney impairment."
+  },
+  {
+    "patient_id": "P009",
+    "note": "Severe chest pain reported. ECG abnormalities detected."
+  },
+  {
+    "patient_id": "P010",
+    "note": "Patient reports mild fatigue. No significant abnormalities found."
+  }
+]

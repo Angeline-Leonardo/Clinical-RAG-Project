@@ -1,0 +1,5 @@
+venv/
+__pycache__/
+*.pth
+*.dylib
+.DS_Store
