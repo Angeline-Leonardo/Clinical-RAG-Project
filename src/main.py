@@ -1,17 +1,20 @@
 from sentence_transformers import SentenceTransformer
 from fastapi import FastAPI
 from pydantic import BaseModel
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import numpy as np 
 import faiss 
+import torch
+from src.classifier import classify_patient
+import json 
 app = FastAPI()
 
 index = faiss.read_index("src/index.faiss")
-model = SentenceTransformer("all-MiniLM-L6-V2")
+model = SentenceTransformer("all-MiniLM-L6-v2")
 docs = np.load("src/docs.npy", allow_pickle=True)
-llm_name= "google/gemma-7b-it" # can switch to bigger medical reasoning model on GPU
+llm_name= "google/flan-t5-base" # can switch to bigger medical reasoning model on GPU
 tokenizer = AutoTokenizer.from_pretrained(llm_name)
-llm_model = AutoModelForCausalLM.from_pretrained(llm_name)
+llm_model = AutoModelForSeq2SeqLM.from_pretrained(llm_name)
 class QueryRequest(BaseModel):
     query: str
 
@@ -44,18 +47,27 @@ def ask_question(request:QueryRequest):
     } 
 
 # classify : classify diff patients into stable, emergency, critical 
+
 @app.get("/classify")
-def classify_patient():
-    docs = np.load("src/docs.npy", allow_pickle=True)
-    prompt=f"""You are a clinical triage assistant. Classify these patients into
-    Stable, Emergency or Critical. {docs}.
-    Answer only in this format: Patient ID: Status. 
-    Example: Patient P003: Stable 
-    """
-    inputs = tokenizer(prompt, return_tensors="pt", truncation=True)
-    outputs = llm_model.generate(**inputs, max_new_tokens=150, do_sample=False, temperature=0.0)
-    answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return answer
+def classify_all():
 
+    with open("data/clinical_notes.json", "r") as f:
+        data = json.load(f)
 
+    results = []
 
+    for patient in data:
+
+        label = classify_patient(patient["note"])
+
+        results.append({
+            "patient_id": patient["patient_id"],
+            "note": patient["note"],
+            "classification": label
+        })
+
+    # sort by severity
+    priority = {"CRITICAL": 0, "EMERGENCY": 1, "STABLE": 2}
+    results = sorted(results, key=lambda x: priority[x["classification"]])
+
+    return results
